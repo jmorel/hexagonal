@@ -4,7 +4,7 @@ body {
 	padding: 0;
 }
 
-.positioned {
+img {
 	position: absolute;
 	box-sizing: border-box;
 }
