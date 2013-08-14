@@ -1,0 +1,10 @@
+body {
+	background-color: #34acc8;
+	margin: 0;
+	padding: 0;
+}
+
+.positioned {
+	position: absolute;
+	box-sizing: border-box;
+}
