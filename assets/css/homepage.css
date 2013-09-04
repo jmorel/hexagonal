@@ -196,7 +196,7 @@ body {
 }
 
 .slot-small > .text-content { 
-    background: url('slot-small-bg.png'); 
+    background: url('../img/slot-small-bg.png'); 
 }
 
 .slot-medium > .text-content { 
@@ -204,7 +204,7 @@ body {
     padding-bottom: 12.5px;
 
     /* Other */
-    background: url('slot-medium-bg.png');
+    background: url('../img/slot-medium-bg.png');
 }
 
 .slot-large > .text-content {
@@ -212,7 +212,7 @@ body {
     padding-bottom: 25px;
 
     /* Other */
-    background: url('slot-large-bg.png');    
+    background: url('../img/slot-large-bg.png');    
 }
 
 /* ==========================================================================
@@ -472,7 +472,7 @@ body {
     height: 62px;
 
     /* Other */
-    background: url('contact-link-bg.png');
+    background: url('../img/contact-link-bg.png');
     line-height: 60px;
     font-family: 'Franchise Bold';
     font-size: 30pt;
@@ -517,13 +517,13 @@ body {
     letter-spacing: 1px;
 }
 
-.arrow-left { background: url('arrow-left-bg.png'); }
+.arrow-left { background: url('../img/arrow-left-bg.png'); }
 
-.arrow-right { background: url('arrow-right-bg.png'); }
+.arrow-right { background: url('../img/arrow-right-bg.png'); }
 
-.arrow-down { background: url('arrow-down-bg.png'); }
+.arrow-down { background: url('../img/arrow-down-bg.png'); }
 
-.arrow-up { background: url('arrow-up-bg.png'); }
+.arrow-up { background: url('../img/arrow-up-bg.png'); }
 
 /* rotate the text in vertical arrows (up and down) */
 .arrow-down > *, 
