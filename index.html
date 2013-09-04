@@ -1,27 +1,115 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 <head>
-	<title>Jeremy Morel's homepage</title>
-	<link rel="stylesheet" type="text/css" href="style.css">
+    <meta charset="UTF-8">
+
+    <title>Homepage</title>
+    
+    <!-- Browser & platform rendering harmonization -->
+    <link rel="stylesheet" type="text/css" href="assets/css/normalize-2.1.2.css">
+    <!-- Actual styling -->
+    <link rel="stylesheet" type="text/css" href="assets/css/homepage.css">
+    <!-- Fonts -->
+    <link rel="stylesheet" type="text/css" href="assets/css/franchise/stylesheet.css">
+
+    <!-- Alertify.js -->
+    <link rel="stylesheet" type="text/css" href="assets/css/alertify.core.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/alertify.default.css">
+    <script type="text/javascript" src="assets/js/alertify.min.js"></script>
+
+    <!-- Modernizr + detection of non supported CSS3 aspects -->
+    <script type="text/javascript" src="assets/js/modernizr.js"></script>
+    <script type="text/javascript" src="assets/js/html5-css3-check.js"></script>
 </head>
+
 <body>
 
-<!-- <img class="positioned" data-row="0" data-col="0" src="hexagon-bg-3.png">
-<img class="positioned" data-row="4" data-col="4" src="hexagon-bg-2.png"> -->
-<!-- 
-<img class="positioned" data-row="0" data-col="0" src="hexagon-bg-1.png" style="top: 100px; left: 100px; border: 1px solid red;">
-<img class="positioned" data-row="0" data-col="0" src="hexagon-bg-1.png" style="top: 200px; left: 100.5px; border: 1px solid yellow;"> -->
-<!--<img class="positioned" data-row="0" data-col="1" src="hexagon-bg-1.png">
-<img class="positioned" data-row="1" data-col="0" src="hexagon-bg-1.png">
-<img class="positioned" data-row="1" data-col="1" src="hexagon-bg-1.png"> -->
+    <!-- Presentation element -->
+    <div class="slot-large myself" style="top: 270px; left: 970px;">
+        <div class="text-content"><div class="vertically-centered">
+            <div class="intro">Hello! My name is</div>
+            <div class="my-name">Jeremy</div>
+            <div class="ribbon">and I build stuff I think is cool<div class="ribbon-end"></div></div>
+            <p class="tagline">
+                Also, and you may get that<br>
+                from this webpage,<br>
+                I love graphs and maps.
+            </p>
+        </div></div>
 
-<!-- <img class="positioned" data-row="0" data-col="0" src="hexagon-straight-bg-1.png">
-<img class="positioned" data-row="2" data-col="0" src="hexagon-straight-bg-1.png"> -->
-<!--<img class="positioned" data-row="1" data-col="0" src="hexagon-straight-bg-1.png">
-<img class="positioned" data-row="1" data-col="1" src="hexagon-straight-bg-1.png"> -->
+        <div class="twitter-link">    
+            <div class="link-mask"><a class="hexagon-mask" href="http://twitter.com/jmorel_fr"></a></div>
+            <div class="vertically-centered"><img src="assets/img/twitter-logo.png" alt="twitter logo"></div>
+        </div>
+        <div class="email-link">    
+            <div class="link-mask"><a class="hexagon-mask" href="mailto:morel.jeremy@gmail.com"></a></div>
+            <div class="vertically-centered">@</div>
+        </div>
+    </div>
 
-<!-- launch positioning -->
-<script type="text/javascript" src="position.js"></script>
+    <!-- Navigation arrows (purely indicative) -->
+    <div class="arrow-left" style="top:600px; left: 50px;">
+        <div class="text-content"><div class="vertically-centered">
+            Silly
+        </div></div>
+    </div>
+
+    <div class="arrow-right" style="top:580px; left: 300px;">
+        <div class="text-content"><div class="vertically-centered">
+            Serious&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </div></div>
+    </div>
+
+    <div class="arrow-up" style="top:510px; left: 170px;">
+        <div class="text-content"><div class="vertically-centered">
+            Digital&nbsp;&nbsp;&nbsp;
+        </div></div>
+    </div>
+
+    <div class="arrow-down" style="top:675px; left: 190px;">
+        <div class="text-content"><div class="vertically-centered">
+            &nbsp;&nbsp;&nbsp;&nbsp;Physical
+        </div></div>
+    </div>
+
+    <!-- Projects list -->
+
+    <!-- Sample projects -->
+    <!-- Medium
+
+    <div class="slot-medium project" style="top: 150px; left: 200px;">
+        <div class="link-mask"><a class="hexagon-mask" href="google.com"></a></div>
+        <div class="text-content"><div class="vertically-centered">
+            <div class="project-name">
+                <span class="capitalize">Les</span><br>petits dahus<br>
+                <div class="ribbon"></div>
+            </div>
+            <p class="tagline">Reinventing a classic <br> board game.</p>
+        </div></div>
+    </div> 
+    
+    -->
+    <!-- Large
+    <div class="slot-large project" data-frames="2" style="top: 480px; left: 595px">
+        <div class="link-mask"><a class="hexagon-mask" href="google.com"></a></div>
+        
+        <div class="text-content frame-1"><div class="vertically-centered">
+            <div class="project-name">
+                Naphtaline<br>
+                <div class="ribbon" data-tld=".net"></div>
+            </div>
+            <p class="tagline">Truly simple issue tracking.<br>
+                Built for everyday people</p>
+        </div></div>
+        <img class="frame-2" src="img-2.png" alt="content/naphtaline screenshot #2">
+        <img class="frame-3" src="img-3.png" alt="content/naphtaline screenshot #3">
+        <img class="frame-4" src="img-4.png" alt="content/naphtaline screenshot #4">
+    </div>
+    -->
+
+    <!-- Enable navigation & animations -->
+    <script type="text/javascript" src="animation.js"></script>
+    <script type="text/javascript" src="navigation.js"></script>
 
 </body>
 </html>

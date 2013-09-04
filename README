@@ -1,0 +1,61 @@
+# Homepage
+
+The page is filled with hexagons of 3 possible sizes (radius: 80px, 160px and 240px), all tilted by 9deg. They don't overlap and they are placed so that the distance between the edges of two adjacent hexagons is minimized but never be less than 5px. Large and Medium elements can contain data and links to project (see below for detailed instructions). The goal is to cover the screen with more hexagons than it can possibly display and navigate around using the drag to scroll style of navigation common to map applications. 
+
+# General template / overview
+
+```html
+<div class="slot-large project" data-frames="XXXX" style="top: XXXX; left: XXXX">
+    
+    <div class="link-mask"><a class="hexagon-mask" href="XXXX"></a></div>
+    
+    <div class="text-content frame-1"><div class="vertically-centered">
+        <div class="project-name">
+            XXXX<br>
+            <div class="ribbon" data-tld=".net"></div>
+        </div>
+        <p class="tagline">Truly simple issue tracking.<br>
+            Built for everyday people</p>
+    </div></div>
+
+    <img class="frame-2" src="XXXX" alt="XXXX">
+    
+    <img class="frame-3" src="XXXX" alt="XXXX">
+    
+    <img class="frame-4" src="XXXX" alt="XXXX">
+
+</div>
+```
+
+# Details
+
+`<div class="slot-large project" data-frames="XXXX" style="top: XXXX; left: XXXX">`
+
+* `.slot-large` can also be `.slot-medium` (`.slot-small` cannot contain data, too small)
+* `.project` class necessary
+* `data-frames` attribute optional but if defined must contains the number of frames the animation will have to loop through (maximum 4 at the moment. E.g. `data-frames="3"`
+* `style="top: XXXX; left: XXXX"` absolute positioning, position in pixels
+
+`<div class="link-mask"><a class="hexagon-mask" href="XXXX"></a></div>`
+Mandatory element. Change `XXXX` for the project's url.
+
+```
+<div class="text-content frame-1"><div class="vertically-centered">
+    <div class="project-name">
+        XXXX<br>
+        <div class="ribbon" data-tld=".net"></div>
+    </div>
+    <p class="tagline">XXXX</p>
+</div></div>
+````
+Each large or medium slot must contain at least on of these `text-content` element: for the project's title and tagline.
+* `.frame-11` necessary only if the `data-frames` attributes is set.
+* `data-tld` attribute optional
+
+
+```
+<img class="frame-2" src="XXXX" alt="XXXX">
+<img class="frame-3" src="XXXX" alt="XXXX">
+<img class="frame-4" src="XXXX" alt="XXXX">
+```
+You can include up to 3 additional frames, applying to them the `.frame-2`, `.frame-3` and `.frame-4` classes. You have to set-up the `data-frames` attribute of the slot element accordingly for the animation to play nicely.
