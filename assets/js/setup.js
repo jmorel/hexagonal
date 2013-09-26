@@ -37,6 +37,21 @@ var slotSizes = {
 		large: 	{ node: largeNode, r: 240, h: 240*cos(PI/6)} } ,
 	sizeID = 'small';
 
+var smallSlot = new Slot();
+smallSlot.setNode( slotSizes['small'].node );
+smallSlot.width = 159;
+smallSlot.height = 150;
+
+var mediumSlot = new Slot();
+mediumSlot.setNode( slotSizes['medium'].node );
+mediumSlot.width = 317;
+mediumSlot.height = 299;
+
+var largeSlot = new Slot();
+largeSlot.setNode( slotSizes['large'].node );
+largeSlot.width = 475;
+largeSlot.height = 448;
+
 // slots
 function Slot() {
 
@@ -52,24 +67,59 @@ function Slot() {
 	self.isSelected = false;
 	self.id = 0;
 
-	self.toggleSelectedStatus = function() {
+	self.onClick = function() {
+		if ( !self.id ) {
+			// The element did not exist yet
+			// we insert it in the page
+			self.instanciate();
+			return;
+		}
+		// normal procedure afterwards
 		if ( self.isSelected ) {
 			self.isSelected = false;
 			self.node.style.opacity = 1;
 			selectedSlot = undefined;
-			if ( !self.id ) {
-				// The element did not exist yet
-				// we insert it in the page
-				slots.push( self );
-				self.id = slots.length;
-				self.node.dataset.slotid = slots.length;
-			}
 		} else { 
 			self.isSelected = true;
 			self.node.style.opacity = 0.4;
 			selectedSlot = self;
 		}
-		
+	}
+
+	self.toggleCursorStatus = function() {
+		self.node.style.opacity = 0.4;
+		if ( self.isSelected ) {
+			// hide element
+			self.isSelected = false;
+			selectedSlot = undefined;
+			document.body.removeChild( self.node );
+		} else {
+			// show element
+			self.isSelected = true;
+			selectedSlot = self;
+			document.body.appendChild( self.node );
+		}
+	}
+
+	self.instanciate = function() {
+		var s = new Slot();
+		// set up size
+		// do nothing at the moment
+		// set up node
+		s.setNode( self.node.cloneNode(true) );
+		s.node.style.opacity = 1;
+		// this is necessary, height and width cannot be obtained with clientWidth/Height yet
+		s.height = self.height;
+		s.width = self.width;
+
+		document.body.appendChild( s.node );
+		// set up position
+		s.setPosition( self.x, self.y );
+		// append slot
+		slots.push( s );
+		// set slot id into html doc
+		s.node.dataset.slotid = slots.length;
+		s.setID( slots.length );
 	}
 
 	self.setAll = function(node, x, y, h) {
@@ -86,7 +136,7 @@ function Slot() {
 		self.node = node;
 		self.width = parseFloat( node.clientWidth );
 		self.height = parseFloat( node.clientHeight );
-		self.node.onclick = self.toggleSelectedStatus;
+		self.node.onclick = self.onClick;
 	}
 
 	self.setPosition = function(x, y) {
@@ -113,26 +163,29 @@ function changeMode( evt ) {
 	if ( evt.charCode == 49 ) { 
 		// key = 1, small slot
 		//sizeID = 'small';
-		var s = new Slot();
-		s.setSize( slotSizes['small'].h  );
-		s.setNode( slotSizes['small'].node );
-		document.body.appendChild( s.node );
-		s.toggleSelectedStatus();
+		if ( selectedSlot != smallSlot ) {
+			if ( selectedSlot == mediumSlot || selectedSlot == largeSlot ) {
+				selectedSlot.toggleCursorStatus();
+			}
+			smallSlot.toggleCursorStatus();
+		}
 
 	} else if ( evt.charCode == 50 ) {
 		// key = 2, medium slot
-		var s = new Slot();
-		s.setSize( slotSizes['medium'].h  );
-		s.setNode( slotSizes['medium'].node );
-		document.body.appendChild( s.node );
-		s.toggleSelectedStatus();
+		if ( selectedSlot != mediumSlot ) {
+			if ( selectedSlot == smallSlot || selectedSlot == largeSlot ) {
+				selectedSlot.toggleCursorStatus();
+			}
+			mediumSlot.toggleCursorStatus();
+		}
 	} else if ( evt.charCode == 51 ) { 
 		// key = 3, large slot
-		var s = new Slot();
-		s.setSize( slotSizes['large'].h  );
-		s.setNode( slotSizes['large'].node );
-		document.body.appendChild( s.node );
-		s.toggleSelectedStatus();
+		if ( selectedSlot != largeSlot ) {
+			if ( selectedSlot == mediumSlot || selectedSlot == smallSlot ) {
+				selectedSlot.toggleCursorStatus();
+			}
+			largeSlot.toggleCursorStatus();
+		}
 	} else if ( evt.charCode == 122 ) {
 		// key = z, undo
 		//slot = slots.pop();
@@ -141,6 +194,11 @@ function changeMode( evt ) {
 		// key = d, delete
 	} else if ( evt.charCode == 48 ) {
 		// key = 0, unselect all
+		if ( 	selectedSlot == mediumSlot || 
+				selectedSlot == largeSlot ||
+				selectedSlot == smallSlot) {
+				selectedSlot.toggleCursorStatus();
+			}
 	}
 }
 
@@ -241,7 +299,7 @@ function loadExistingSlots() {
 		
 		var s = new Slot();
 		// set up size
-		if (	div.classList.contains('slot-small') ||
+/*		if (	div.classList.contains('slot-small') ||
 				div.classList.contains('arrow-left') ||
 				div.classList.contains('arrow-right') ||
 				div.classList.contains('arrow-up') ||
@@ -253,7 +311,7 @@ function loadExistingSlots() {
 			s.setSize( slotSizes['large']  );
 		} else {
 			continue;
-		}
+		}*/
 		
 		// set up node
 		s.setNode( div );
