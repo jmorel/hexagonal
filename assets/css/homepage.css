@@ -245,6 +245,7 @@ body {
 }
 
 .slot-medium .project-name {
+    margin-left: -0.3em;
     /* Other */
     font-size: 40pt;
 }
@@ -258,6 +259,7 @@ body {
 }
 
 .slot-large .project-name {
+    margin-left: -0.3em;
     /* Other */
     font-size: 66pt;
 }

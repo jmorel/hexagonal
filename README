@@ -59,3 +59,15 @@ Each large or medium slot must contain at least on of these `text-content` eleme
 <img class="frame-4" src="XXXX" alt="XXXX">
 ```
 You can include up to 3 additional frames, applying to them the `.frame-2`, `.frame-3` and `.frame-4` classes. You have to set-up the `data-frames` attribute of the slot element accordingly for the animation to play nicely.
+
+# Sizes
+
+```                                        
+Format  Radius  Hexagon Hexagon Tilted  Tilted 
+                width   height  width   height 
+----------------------------------------------
+Large   240px   480px   416px   475px   448px
+Medium  160px   320px   277px   317px   299px
+Small    80px   160px   139px   159px   150px
+
+```
