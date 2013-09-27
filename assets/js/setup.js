@@ -32,25 +32,22 @@ largeNode.className = 'slot-large';
 largeNode.innerHTML = '<div class="text-content"><div class="vertically-centered"></div></div>';
 
 var slotSizes = {
-		small: 	{ node: smallNode, r: 80, h: 80*cos(PI/6)},
-		medium:	{ node: mediumNode, r: 160, h: 160*cos(PI/6)},
-		large: 	{ node: largeNode, r: 240, h: 240*cos(PI/6)} } ,
+		small: 	{ node: smallNode, r: 80, h: 80*cos(PI/6), width: 159, height: 150},
+		medium:	{ node: mediumNode, r: 160, h: 160*cos(PI/6), width: 317, height: 299},
+		large: 	{ node: largeNode, r: 240, h: 240*cos(PI/6), width: 475, height: 448} } ,
 	sizeID = 'small';
 
 var smallSlot = new Slot();
 smallSlot.setNode( slotSizes['small'].node );
-smallSlot.width = 159;
-smallSlot.height = 150;
+smallSlot.setSize( slotSizes['small'].h, slotSizes['small'].width, slotSizes['small'].height );
 
 var mediumSlot = new Slot();
 mediumSlot.setNode( slotSizes['medium'].node );
-mediumSlot.width = 317;
-mediumSlot.height = 299;
+mediumSlot.setSize( slotSizes['medium'].h, slotSizes['medium'].width, slotSizes['medium'].height );
 
 var largeSlot = new Slot();
 largeSlot.setNode( slotSizes['large'].node );
-largeSlot.width = 475;
-largeSlot.height = 448;
+largeSlot.setSize( slotSizes['large'].h, slotSizes['large'].width, slotSizes['large'].height );
 
 // slots
 function Slot() {
@@ -66,6 +63,7 @@ function Slot() {
 	self.node = undefined;
 	self.isSelected = false;
 	self.id = 0;
+	self.fitted = false;
 
 	self.onClick = function() {
 		if ( !self.id ) {
@@ -109,8 +107,7 @@ function Slot() {
 		s.setNode( self.node.cloneNode(true) );
 		s.node.style.opacity = 1;
 		// this is necessary, height and width cannot be obtained with clientWidth/Height yet
-		s.height = self.height;
-		s.width = self.width;
+		s.setSize( self.h, self.width, self.height );
 
 		document.body.appendChild( s.node );
 		// set up position
@@ -120,6 +117,8 @@ function Slot() {
 		// set slot id into html doc
 		s.node.dataset.slotid = slots.length;
 		s.setID( slots.length );
+
+		return s;
 	}
 
 	self.setAll = function(node, x, y, h) {
@@ -149,8 +148,103 @@ function Slot() {
 		self.node.style.left = ( self.x - self.width/2 ) + "px";
 	}
 
-	self.setSize = function(h) {
+	self.setSize = function(h, width, height) {
 		self.h = h;
+		self.width = width;
+		self.height = height;
+	}
+
+	self.fitPosition = function() {
+
+		self.fitted = false;
+
+		var fittedSlots = [];
+		for (var i = 0; i < slots.length; i++) {
+			if ( slots[i].fitted ) {
+				fittedSlots.push( slots[i] );
+			}
+		};
+
+		if ( fittedSlots.length == 0 ) {
+			// register position
+			self.fitted = true;
+			self.isSelected = false;
+			self.node.style.opacity = 1;
+			selectedSlot = undefined;
+			return;
+		}
+
+		// we need to adjust the position with the other slots already created
+		// find the closest slot
+		var dMin = distance(self, fittedSlots[0]);
+		var closestSlot = fittedSlots[0];
+		for ( var i = 1; i < fittedSlots.length; i++ ) {
+			var d = distance(self, fittedSlots[i]);
+			if( dMin > d ) {
+				closestSlot = fittedSlots[i];
+				dMin = d;
+			}
+		}
+
+		// bring the new slot closer to the closest one
+		var dir = direction(self, closestSlot);
+		var d = distance(self, closestSlot) - MARGIN;
+		self.setPosition(self.x+d*dir.x, self.y+d*dir.y);
+
+		if ( fittedSlots.length == 1 ) {
+			// register position
+			self.fitted = true;
+			self.isSelected = false;
+			self.node.style.opacity = 1;
+			selectedSlot = undefined;
+			return;
+		}
+
+		var slidingDir = { theta: dir.theta+PI/2, x: cos( dir.theta+PI/2 ), y: sin( dir.theta+PI/2 ) };
+		var secondClosestSlot = undefined;
+		// now find the second closest in an adjacent direction
+		for ( var i = 0; i < fittedSlots.length; i++ ) {
+			// do not compare to closest slot 
+			if ( fittedSlots[i] == closestSlot ) continue;
+			// only consider adjacent directions
+			var tempDir = direction(self, fittedSlots[i]);
+			var deltaTheta = abs(tempDir.theta - dir.theta);
+			// bring deltaTheta between the [0 ; PI] range
+/*			if ( deltaTheta > ( PI + 0.5 ) ) { 
+				deltaTheta = 2*PI - deltaTheta;
+			}*/
+			// adjacent direction <=> deltaTheta ~= PI/3 or deltaTheta ~= 5*PI/3
+			if ( !(	deltaTheta > (PI/3 - 0.5) &&
+					deltaTheta < (PI/3 + 0.5) ) &&
+				 !(	deltaTheta > (5*PI/3 - 0.5) &&
+				 	deltaTheta < (5*PI/3 + 0.5) ) ) {
+				continue;
+			}
+
+			var d = distance(self, fittedSlots[i]);
+			if ( !secondClosestSlot ) {
+				secondClosestSlot = fittedSlots[i];
+				dMin = d;
+			} else if ( dMin > d ) {
+				secondClosestSlot = fittedSlots[i];
+				dMin = d;
+			}
+		}
+		if ( secondClosestSlot ) {
+			dir = direction(self, secondClosestSlot);
+			d = distance(self, secondClosestSlot) - MARGIN;
+			cosAlpha = slidingDir.x*dir.x + slidingDir.y*dir.y; // both slidingDir and dir have a length of 1
+			length = d / cosAlpha;
+			self.setPosition(
+				self.x+length*slidingDir.x, self.y+length*slidingDir.y);
+		}
+
+		// register position
+		self.fitted = true;
+		self.isSelected = false;
+		self.node.style.opacity = 1;
+		selectedSlot = undefined;
+		
 	}
 }
 
@@ -161,6 +255,7 @@ var slots = [],
 function changeMode( evt ) {
 	console.log(evt.charCode);
 	if ( evt.charCode == 49 ) { 
+		divMode.innerHTML = 'New small slot';
 		// key = 1, small slot
 		//sizeID = 'small';
 		if ( selectedSlot != smallSlot ) {
@@ -171,6 +266,7 @@ function changeMode( evt ) {
 		}
 
 	} else if ( evt.charCode == 50 ) {
+		divMode.innerHTML = 'New medium slot';
 		// key = 2, medium slot
 		if ( selectedSlot != mediumSlot ) {
 			if ( selectedSlot == smallSlot || selectedSlot == largeSlot ) {
@@ -179,6 +275,7 @@ function changeMode( evt ) {
 			mediumSlot.toggleCursorStatus();
 		}
 	} else if ( evt.charCode == 51 ) { 
+		divMode.innerHTML = 'New large slot';
 		// key = 3, large slot
 		if ( selectedSlot != largeSlot ) {
 			if ( selectedSlot == mediumSlot || selectedSlot == smallSlot ) {
@@ -187,91 +284,44 @@ function changeMode( evt ) {
 			largeSlot.toggleCursorStatus();
 		}
 	} else if ( evt.charCode == 122 ) {
+		divMode.innerHTML = 'undo';
 		// key = z, undo
 		//slot = slots.pop();
 		//document.body.removeChild(slot.img);
 	} else if ( evt.charCode == 100 ) {
 		// key = d, delete
 	} else if ( evt.charCode == 48 ) {
+		divMode.innerHTML = 'unselect';
 		// key = 0, unselect all
 		if ( 	selectedSlot == mediumSlot || 
 				selectedSlot == largeSlot ||
 				selectedSlot == smallSlot) {
 				selectedSlot.toggleCursorStatus();
 			}
+	} else if ( evt.charCode == 102 ) {
+		divMode.innerHTML = 'fit';
+		// key = 107, fit selected item
+		if ( !( selectedSlot == mediumSlot || 
+				selectedSlot == largeSlot ||
+				selectedSlot == smallSlot )) {
+				selectedSlot.fitPosition();
+		} else {
+			var newSlot = selectedSlot.instanciate();
+			newSlot.fitPosition();
+		}
 	}
 }
 
-/*function dropCursorShadow(evt) {
-	//cursorShadow.updatePosition(evt.pageX, - evt.pageY );
-}*/
 
-/*function addSlot(evt) {
-	// create and display said slot
-	var slot = new Slot(evt.pageX, -evt.pageY);
-	slots.push(slot);
-	document.body.appendChild(slot.img);
 
-	// we need to adjust the position with the other slots already created
-	// find the closest slot
-	if(slots.length <= 1) { return; }
-	var dMin = distance(slot, slots[0]);
-	var closestSlot = slots[0];
-	// go to length-2 to avoid the slot we just added
-	var i = 1;
-	for ( i; i < slots.length-1; i++ ) {
-		var d = distance(slot, slots[i]);
-		if(dMin > d) {
-			closestSlot = slots[i];
-			dMin = d;
-		}
-	}
-	// bring the new slot closer to the closest one
-	var dir = direction(slot, closestSlot);
-	var d = distance(slot, closestSlot) - MARGIN;
-	slot.updatePosition(slot.x+d*dir.x, slot.y+d*dir.y);
-
-	
-	var slidingDir = { theta: dir.theta+PI/2, x: cos( dir.theta+PI/2 ), y: sin( dir.theta+PI/2 ) };
-	var secondClosestSlot;
-	// now find the second closest in an adjacent direction
-	for ( var j=0; j < slots.length-1; j++ ) {
-		// do not compare to closest slot 
-		if ( slots[j] == closestSlot ) continue;
-		// only consider adjacent directions
-		var tempDir = direction(slot, slots[j]);
-		var deltaTheta = abs(tempDir.theta - dir.theta);
-		if ( deltaTheta > ( PI + 0.5 ) ) {
-			deltaTheta = 2*PI - deltaTheta;
-		}
-		if ( deltaTheta > (PI/3 + 0.5) ) continue;
-		var d = distance(slot, slots[j]);
-		if ( !secondClosestSlot ) {
-			secondClosestSlot = slots[j];
-			dMin = d;
-		} else if ( dMin > d ) {
-			secondClosestSlot = slots[j];
-			dMin = d;
-		}
-	}
-	if ( secondClosestSlot ) {
-		dir = direction(slot, secondClosestSlot);
-		d = distance(slot, secondClosestSlot) - MARGIN;
-		cosAlpha = slidingDir.x*dir.x + slidingDir.y*dir.y; // both slidingDir and dir have a length of 1
-		length = d / cosAlpha;
-		slot.updatePosition(
-			slot.x+length*slidingDir.x, slot.y+length*slidingDir.y);
-	}
-	
-}*/
-
-/*function distance(slotA, slotB) {
+function distance(slotA, slotB) {
 	var vector = { x: slotB.x-slotA.x, y: slotB.y-slotA.y },
 		dir = direction(slotA, slotB);
 	var dotProduct = vector.x*dir.x + vector.y*dir.y;
 	var distance = dotProduct - slotA.h - slotB.h;
 	return distance;
 }
+
 function direction(slotA, slotB) {
 	var vector = { x: slotB.x-slotA.x, y: slotB.y-slotA.y },
 		dir = directions[0],
@@ -284,12 +334,8 @@ function direction(slotA, slotB) {
 		}
 	};
 	return dir;
-}*/
+}
 
-/*function click( evt ) {
-	//addSlot( evt );
-	console.log('click');
-}*/
 
 function loadExistingSlots() {
 	// Load already existing slots
@@ -298,26 +344,31 @@ function loadExistingSlots() {
 		var div = divs[i];
 		
 		var s = new Slot();
+
 		// set up size
-/*		if (	div.classList.contains('slot-small') ||
+		var size;
+		if (	div.classList.contains('slot-small') ||
 				div.classList.contains('arrow-left') ||
 				div.classList.contains('arrow-right') ||
 				div.classList.contains('arrow-up') ||
 				div.classList.contains('arrow-down') ) {
-			s.setSize( slotSizes['small'] );
+			size = slotSizes['small'];
 		} else if ( div.classList.contains('slot-medium') ) {
-			s.setSize( slotSizes['medium'] );
+			size = slotSizes['medium'];
 		} else if ( div.classList.contains('slot-large') ) {
-			s.setSize( slotSizes['large']  );
+			size = slotSizes['large'];
 		} else {
 			continue;
-		}*/
+		}
+		s.setSize( size.h, size.width, size.height );
 		
 		// set up node
 		s.setNode( div );
 
 		// set up position
-		s.setPosition( parseFloat( div.style.left ), -parseFloat( div.style.top ) );
+		s.setPosition( 
+			parseFloat( div.style.left ) + parseFloat( div.clientWidth )/2, 
+			-parseFloat( div.style.top ) - parseFloat( div.clientHeight)/2 );
 
 		// append slot
 		slots.push( s );
@@ -337,8 +388,10 @@ function disableExistingLinks() {
 }
 
 // BEGIN !
+var divMode = document.querySelector('.setup-mode');
 loadExistingSlots();
 disableExistingLinks();
+
 
 function move( evt ) {
 	if ( selectedSlot ) {

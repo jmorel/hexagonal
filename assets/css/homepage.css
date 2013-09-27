@@ -194,6 +194,7 @@ body {
 
 .slot-small > .text-content { 
     background: url('../img/slot-small-bg.png'); 
+    background-repeat: no-repeat;
 }
 
 .slot-medium > .text-content { 
@@ -202,6 +203,7 @@ body {
 
     /* Other */
     background: url('../img/slot-medium-bg.png');
+    background-repeat: no-repeat;
 }
 
 .slot-large > .text-content {
@@ -209,7 +211,8 @@ body {
     padding-bottom: 25px;
 
     /* Other */
-    background: url('../img/slot-large-bg.png');    
+    background: url('../img/slot-large-bg.png');
+    background-repeat: no-repeat;
 }
 
 /* ==========================================================================
@@ -245,12 +248,27 @@ body {
     /* Other */
     font-size: 40pt;
 }
+.slot-medium .project-name.smaller {
+    /* Other */
+    font-size: 37pt;
+}
+.slot-medium .project-name.bigger {
+    /* Other */
+    font-size: 43pt;
+}
 
 .slot-large .project-name {
     /* Other */
     font-size: 66pt;
 }
-
+.slot-large .project-name.smaller {
+    /* Other */
+    font-size: 62pt;
+}
+.slot-large .project-name.bigger {
+    /* Other */
+    font-size: 70pt;
+}
 
 /* Ribbon
    ========================================================================== */
@@ -267,7 +285,7 @@ body {
     /* Positioning */
     position: absolute;
     top: 0;
-    left: -5px;
+    left: -4.5px;
 
     /* Display & Box Model */
     display: inline-block;
@@ -284,7 +302,7 @@ body {
     /* Positioning */
     position: absolute;
     top: 0;
-    right: -5px;
+    right: -4.5px;
 
     /* Display & Box Model */
     display: inline-block;
