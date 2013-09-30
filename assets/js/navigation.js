@@ -39,6 +39,7 @@
     window.onclick = function( evt ) {
         if ( isZoomedOut ) {
             isZoomedOut = false;
+            document.body.classList.add('zoomOut');
             document.body.classList.add('noZoom');
         }
     }

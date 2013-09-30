@@ -16,12 +16,19 @@ body {
 }
 
 body.zoomOut {
-    zoom: 30%;
+    zoom: 0.3;
+    -moz-transform: scale(0.3);
 }
 
 body.noZoom {
-    zoom: 100%;
-    -webkit-transition: zoom 1s ease;
+    zoom: 1;
+    -moz-transform: scale(1);
+    
+    -webkit-transition: all 0.3s ease-out; 
+    -moz-transition:    all 0.3s ease-out; 
+    -o-transition:      all 0.3s ease-out; 
+    transition:         all 0.3s ease-out; 
+
 }
 
 * {
