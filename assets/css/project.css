@@ -91,7 +91,11 @@ figcaption {
     width: 100%;
     background: rgba(255, 255, 255, 0.8);
     opacity: 0;
-    -webkit-transition: opacity 0.2s ease;
+
+    -webkit-transition: opacity 0.2s ease;  
+    -moz-transition:    opacity 0.2s ease;  
+    -o-transition:      opacity 0.2s ease;  
+    transition:         opacity 0.2s ease; 
 }
 
 figure:hover figcaption {
@@ -137,7 +141,12 @@ header {
 
 .tilted {
     /* Display & Box Model*/
-    -webkit-transform: skew(0, -9deg);
+    -webkit-transform:  skew(0, -9deg); 
+    -moz-transform:     skew(0, -9deg); 
+    -ms-transform:      skew(0, -9deg); 
+    -o-transform:       skew(0, -9deg); 
+    transform:          skew(0, -9deg); 
+
     width: 100%;
     height: 100%;
 
