@@ -78,7 +78,7 @@ body {
 .link-mask {
     /* Positioning */
     position: absolute;
-    z-index: 1;
+    z-index: 1000;
 
     /* Display & Box Model */
     display: inline-block;
