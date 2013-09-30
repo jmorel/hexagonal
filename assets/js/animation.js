@@ -31,11 +31,6 @@
      * Add .flipping class to the the slot to mark its status
      */
     function startAnimation( slot ) {
-
-        if ( slot.classList.contains( 'flipping' ) ) {
-            // we are already flipping through the frames, no need to restart the animation
-            return;
-        }
         
         // add .flipping class
         slot.classList.add( 'flipping' );
@@ -59,6 +54,20 @@
 
     function startAnimationFromMask() {
         var slot = this.parentNode.parentNode;
+
+        if ( slot.classList.contains( 'flipping' ) ) {
+            // we are already flipping through the frames, no need to restart the animation
+
+            if (slot.classList.contains( 'random' ) ) {
+                // if this slot was flipping randomly, we have to keep it flipping and 
+                // ask another slot at random to flip
+                slot.classList.remove( 'random' );
+                doNotStopAnimationAfterIteration( slot );
+                animateRandomSlot();
+            }
+            return;
+        }
+        
         startAnimation( slot );
     }
 
@@ -83,6 +92,27 @@
             frames[i].addEventListener('oanimationiteration', stopFlipping);
             frames[i].addEventListener('MSAnimationIteration', stopFlipping);
             frames[i].addEventListener('animationiteration', stopFlipping);
+        }
+    }
+
+    // This is an awful name, I know
+    function doNotStopAnimationAfterIteration( slot ) {
+
+        var frames = slot.children;
+        
+        for ( var i = 0; i < frames.length; i++ ) {
+            if ( !( frames[i].classList.contains('frame-1') ||
+                    frames[i].classList.contains('frame-2') ||
+                    frames[i].classList.contains('frame-3') ||
+                    frames[i].classList.contains('frame-4') ) ) {
+                continue;
+            }
+
+            // stop animation after the end of the iteration
+            frames[i].removeEventListener('webkitAnimationIteration', stopFlipping);
+            frames[i].removeEventListener('oanimationiteration', stopFlipping);
+            frames[i].removeEventListener('MSAnimationIteration', stopFlipping);
+            frames[i].removeEventListener('animationiteration', stopFlipping);
         }
     }
 
