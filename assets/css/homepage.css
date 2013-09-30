@@ -576,7 +576,12 @@ body {
     -moz-user-select:       none;
     -ms-user-select:        none;
     -o-user-select:         none;
-    user-select:            none;       
+    user-select:            none;
+    
+    /* Other */
+    cursor:  move;
+    cursor: -webkit-grabbing;
+    cursor: -moz-grabbing;       
 }
 
 /* ==========================================================================
