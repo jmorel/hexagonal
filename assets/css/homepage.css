@@ -12,6 +12,16 @@ body {
     cursor:  move;
     cursor: -webkit-grab;
     cursor: -moz-grab;
+    font-family: 'Georgia', serif;
+}
+
+body.zoomOut {
+    zoom: 30%;
+}
+
+body.noZoom {
+    zoom: 100%;
+    -webkit-transition: zoom 1s ease;
 }
 
 * {
@@ -25,6 +35,35 @@ body {
     box-sizing:         border-box;
     margin: 0;
     border: 0;
+}
+
+/* ==========================================================================
+   Header
+   ========================================================================== */
+header {
+    /* Positioning */
+    position: absolute;
+    top: 200px;
+    left: 800px;
+
+    /* Display & Box Model */
+    display: inline-block;
+    -webkit-transform:  skew(0deg, -9deg);
+    -moz-transform:     skew(0deg, -9deg);
+    -ms-transform:      skew(0deg, -9deg);
+    -o-transform:       skew(0deg, -9deg);
+    transform:          skew(0deg, -9deg);
+    
+    /* Other */
+    font-family: 'Franchise Bold';
+    font-size: 120pt;
+    color: white;
+
+    /* Activate font smoothing */
+    -webkit-backface-visibility:    hidden;
+    -moz-backface-visibility:       hidden;
+    -ms-backface-visibility:        hidden;
+    backface-visibility:            hidden;
 }
 
 /* ==========================================================================
@@ -172,6 +211,7 @@ body {
     -moz-backface-visibility:       hidden;
     -ms-backface-visibility:        hidden;
     backface-visibility:            hidden;
+
 }
 
 .text-content:before {

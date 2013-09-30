@@ -2,7 +2,8 @@
 
     var oldMouseX, 
         oldMouseY,
-        isDragging = false;
+        isDragging = false,
+        isZoomedOut = true;
 
     function scrollX() {
         var x = (window.pageXOffset !== undefined) ? window.pageXOffset : (document.documentElement || document.body.parentNode || document.body).scrollLeft;
@@ -33,6 +34,13 @@
         // stop isDragging
         document.body.classList.remove('dragging');
         window.onmousemove = function() {}
+    }
+
+    window.onclick = function( evt ) {
+        if ( isZoomedOut ) {
+            isZoomedOut = false;
+            document.body.classList.add('noZoom');
+        }
     }
 
     function dragAround(e) {
