@@ -68,6 +68,13 @@ body {
     height: 448px;
 }
 
+.slot-small, .slot-medium, .slot-large {
+    opacity: 0.3;
+}
+.project {
+    opacity: 1;
+}
+
 /* ==========================================================================
    Hexagonal link mask
    
