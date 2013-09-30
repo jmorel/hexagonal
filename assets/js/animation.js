@@ -31,6 +31,12 @@
      * Add .flipping class to the the slot to mark its status
      */
     function startAnimation( slot ) {
+
+        if ( slot.classList.contains( 'flipping' ) ) {
+            // we are already flipping through the frames, no need to restart the animation
+            return;
+        }
+        
         // add .flipping class
         slot.classList.add( 'flipping' );
 
@@ -138,10 +144,10 @@
      * BEGIN
      */
 
-    //setupAnimationOnHover();
+    setupAnimationOnHover();
 
     // The number of animateRandomSlot() calls is the number of 
     // concurrently animated slots
-    //animateRandomSlot();
-    //animateRandomSlot();
+    animateRandomSlot();
+    animateRandomSlot();
 })();
