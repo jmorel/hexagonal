@@ -3,7 +3,7 @@
     var oldMouseX, 
         oldMouseY,
         isDragging = false,
-        isZoomedOut = true;
+        presentation;
 
     function scrollX() {
         var x = (window.pageXOffset !== undefined) ? window.pageXOffset : (document.documentElement || document.body.parentNode || document.body).scrollLeft;
@@ -36,14 +36,6 @@
         window.onmousemove = function() {}
     }
 
-    window.onclick = function( evt ) {
-        if ( isZoomedOut ) {
-            isZoomedOut = false;
-            document.body.classList.add('zoomOut');
-            document.body.classList.add('noZoom');
-        }
-    }
-
     function dragAround(e) {
         var mouseX = e.clientX,
             mouseY = e.clientY,
@@ -71,5 +63,15 @@
     for (var i = 0; i < links.length; i++) {
         links[i].onclick = doNotFollowIfDrag;
     };
+
+    /**
+     * Initially scroll page to have the presentation slot centered.
+     */
+
+    presentation = document.querySelector( '.myself' );
+    window.scroll(
+        presentation.offsetLeft - ( window.innerWidth - presentation.offsetWidth)  / 2,
+        presentation.offsetTop - ( window.innerHeight - presentation.offsetHeight)  / 2 );
+
 
 })();

@@ -15,22 +15,6 @@ body {
     font-family: 'Georgia', serif;
 }
 
-body.zoomOut {
-    zoom: 0.3;
-    -moz-transform: scale(0.3);
-}
-
-body.noZoom {
-    zoom: 1;
-    -moz-transform: scale(1);
-    
-    -webkit-transition: all 0.3s ease-out; 
-    -moz-transition:    all 0.3s ease-out; 
-    -o-transition:      all 0.3s ease-out; 
-    transition:         all 0.3s ease-out; 
-
-}
-
 * {
     /* Positioning */
     position: relative;
@@ -716,7 +700,6 @@ header {
 .slot-large .frame-2, 
 .slot-large .frame-3, 
 .slot-large .frame-4 {
-    -webkit-transform-origin:   237.5px 224px;
     -webkit-transform-origin:   237.5px 224px;
     -moz-transform-origin:      237.5px 224px;
     -o-transform-origin:        237.5px 224px;
