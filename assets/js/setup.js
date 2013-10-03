@@ -6,7 +6,6 @@
 	var sqrt = Math.sqrt;
 	var abs = Math.abs;
 
-
 	// PArameters
 	var MARGIN = 5; //px
 
@@ -55,17 +54,43 @@
 
 		var self = this;
 		
-		// basic parameters: center position and height
+		// Attributes
+
+		// Coordinates of the slot's center in a graph 
+		// where x is positive towards the right and y 
+		// positive upwards (all in px)
 		self.x = 0;
 		self.y = 0;
+
+		// Dimension of the slot's div in px
 		self.height = 0;
 		self.width = 0;
+
+		// Length of the height of the hexagon
 		self.h = 0;
+
+		// Associated div
 		self.node = undefined;
+
+		// Selection status
 		self.isSelected = false;
+
+		// ID
 		self.id = 0;
+
+		// Fit status
 		self.fitted = false;
 
+		// Methods
+
+		/**
+		 * Upon click, 3 actions:
+		 * * The slot wasn't properly instanciated (ie it was 
+		 *   only a hover shadow) -> instanciate it
+		 * * The slot is selected (and therefore being dragged)
+		 *   -> reposition it
+		 * * The slot is not selected -> select it and start dragging
+		 */
 		self.onClick = function() {
 			if ( !self.id ) {
 				// The element did not exist yet
@@ -73,20 +98,24 @@
 				self.instanciate();
 				return;
 			}
+
 			// normal procedure afterwards
+			if ( self.fitted ) {
+				self.cancelFit();
+			}
+
 			if ( self.isSelected ) {
+				// Unselect
 				self.isSelected = false;
-				self.node.style.opacity = 1;
 				selectedSlot = undefined;
 			} else { 
+				// Select
 				self.isSelected = true;
-				self.node.style.opacity = 0.4;
 				selectedSlot = self;
 			}
 		}
 
 		self.toggleCursorStatus = function() {
-			self.node.style.opacity = 0.4;
 			if ( self.isSelected ) {
 				// hide element
 				self.isSelected = false;
@@ -100,32 +129,27 @@
 			}
 		}
 
+		/**
+		 * Create a new slot, duplicate of this one, and 
+		 * insert it in the slots array.
+		 */
 		self.instanciate = function() {
 			var s = new Slot();
-			// set up size
-			// do nothing at the moment
 			// set up node
 			s.setNode( self.node.cloneNode(true) );
-			s.node.style.opacity = 1;
 			// this is necessary, height and width cannot be obtained with clientWidth/Height yet
 			s.setSize( self.h, self.width, self.height );
-
+			// display element. clientWidth and clientHeight are now available
 			document.body.appendChild( s.node );
 			// set up position
 			s.setPosition( self.x, self.y );
-			// append slot
+			// append slot to slots array
 			slots.push( s );
 			// set slot id into html doc
 			s.node.dataset.slotid = slots.length;
 			s.setID( slots.length );
 
 			return s;
-		}
-
-		self.setAll = function(node, x, y, h) {
-			self.setNode( node );
-			self.setPosition( x, y );
-			self.setSize( h );
 		}
 
 		self.setID = function( id ) {
@@ -139,6 +163,9 @@
 			self.node.onclick = self.onClick;
 		}
 
+		/**
+		 * Save slot central position and update display at ( x - width/2, y - height/2)
+		 */
 		self.setPosition = function(x, y) {
 			if ( x && y ) {
 				self.x = x;
@@ -155,9 +182,21 @@
 			self.height = height;
 		}
 
+		self.registerFit = function() {
+			self.fitted = true;
+			self.isSelected = false;
+			self.node.classList.add( 'fitted' );
+			selectedSlot = undefined;
+		}
+
+		self.cancelFit = function() {
+			self.fitted = false;
+			self.node.classList.remove( 'fitted' );
+		}
+
 		self.fitPosition = function() {
 
-			self.fitted = false;
+			self.cancelFit();
 
 			var fittedSlots = [];
 			for (var i = 0; i < slots.length; i++) {
@@ -167,11 +206,7 @@
 			};
 
 			if ( fittedSlots.length == 0 ) {
-				// register position
-				self.fitted = true;
-				self.isSelected = false;
-				self.node.style.opacity = 1;
-				selectedSlot = undefined;
+				self.registerFit();
 				return;
 			}
 
@@ -193,11 +228,7 @@
 			self.setPosition(self.x+d*dir.x, self.y+d*dir.y);
 
 			if ( fittedSlots.length == 1 ) {
-				// register position
-				self.fitted = true;
-				self.isSelected = false;
-				self.node.style.opacity = 1;
-				selectedSlot = undefined;
+				self.registerFit();
 				return;
 			}
 
@@ -241,10 +272,7 @@
 			}
 
 			// register position
-			self.fitted = true;
-			self.isSelected = false;
-			self.node.style.opacity = 1;
-			selectedSlot = undefined;
+			self.registerFit();
 			
 		}
 	}
@@ -301,7 +329,7 @@
 				}
 		} else if ( evt.charCode == 102 ) {
 			divMode.innerHTML = 'fit';
-			// key = 107, fit selected item
+			// key = f, fit selected item
 			if ( !( selectedSlot == mediumSlot || 
 					selectedSlot == largeSlot ||
 					selectedSlot == smallSlot )) {
@@ -310,6 +338,9 @@
 				var newSlot = selectedSlot.instanciate();
 				newSlot.fitPosition();
 			}
+		} else if ( evt.charCode == 112 ) {
+			// key = p, fit whole page dimension
+			fitPageDimension();
 		}
 	}
 
@@ -335,6 +366,45 @@
 			}
 		};
 		return dir;
+	}
+
+	function fitPageDimension() {
+
+		console.log( slots );
+
+		var width = { start: document.width, end: 0 },
+			height = { start: -document.height, end: 0 },
+			translate = { x: 0, y: 0 };
+
+		// Find out what the page's utile size is
+		for (var i = 0; i < slots.length; i++) {
+			var slot = slots[i];
+			width.start = Math.min( width.start, slot.x - slot.width/2 );
+			width.end = Math.max( width.end, slot.x + slot.width/2 );
+			// the y axis is reverted here
+			height.end = Math.min( height.end, slot.y - slot.height/2 );
+			height.start = Math.max( height.start, slot.y + slot.height/2 );
+		}
+
+		// Add margins
+		width.start = width.start - smallSlot.width;
+		width.end = width.end + smallSlot.width;
+		height.start = height.start + smallSlot.height;
+		height.end = height.end - smallSlot.height;
+
+		// Define relative translation
+		translate.x = width.start;
+		translate.y = height.start;
+		
+		// Translate all elements
+		for (var i = 0; i < slots.length; i++) {
+			var slot = slots[i];
+			slot.setPosition( slot.x - translate.x, slot.y - translate.y );
+		}
+
+		// Reduce page size
+		document.body.style.width = (width.end - width.start).toString() + "px";
+		document.body.style.height = (height.start - height.end).toString() + "px";
 	}
 
 

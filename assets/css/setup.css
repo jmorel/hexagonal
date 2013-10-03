@@ -8,3 +8,7 @@ span.setup-mode {
     right: 0;
     color: white;
 }
+
+.fitted {
+    border: 1px solid red;
+}
