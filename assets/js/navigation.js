@@ -1,6 +1,6 @@
 (function() {
 
-    var oldMouseX, 
+    var oldMouseX,
         oldMouseY,
         isDragging = false,
         presentation;
@@ -28,13 +28,13 @@
         // the cursor isn't over the body anymore (e.g. over 
         // scrollbars)
         return false;
-    }
+    };
 
     window.onmouseup = function(evt) {
         // stop isDragging
         document.body.classList.remove('dragging');
-        window.onmousemove = function() {}
-    }
+        window.onmousemove = function() {};
+    };
 
     function dragAround(e) {
         var mouseX = e.clientX,
@@ -62,7 +62,7 @@
     var links = document.querySelectorAll('a');
     for (var i = 0; i < links.length; i++) {
         links[i].onclick = doNotFollowIfDrag;
-    };
+    }
 
     /**
      * Initially scroll page to have the presentation slot centered.

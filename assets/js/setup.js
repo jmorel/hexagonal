@@ -15,7 +15,7 @@
         baseTheta = PI / 3,
         directions = [];
     for ( var i=0; i<6; i++ ) {
-        directions.push( { theta: shiftTheta+i*baseTheta, x: cos( shiftTheta+i*baseTheta ), y: sin( ssublihiftTheta+i*baseTheta ) } );
+        directions.push( { theta: shiftTheta+i*baseTheta, x: cos( shiftTheta+i*baseTheta ), y: sin( shiftTheta+i*baseTheta ) } );
     }
 
     // templates
