@@ -1,21 +1,19 @@
 (function () {
-    // useful aliases
-    var PI = Math.PI,
-        cos = Math.cos,
-        sin = Math.sin,
-        sqrt = Math.sqrt,
-        abs = Math.abs;
-
+    
     // Parameters
     var MARGIN = 5; //px
 
 
     // basic directions within a slot
-    var shiftTheta = PI / 20 + PI / 6,
-        baseTheta = PI / 3,
+    var shiftTheta = Math.PI / 20 + Math.PI / 6,
+        baseTheta = Math.PI / 3,
         directions = [];
     for ( var i=0; i<6; i++ ) {
-        directions.push( { theta: shiftTheta+i*baseTheta, x: cos( shiftTheta+i*baseTheta ), y: sin( shiftTheta+i*baseTheta ) } );
+        directions.push( {
+            theta: shiftTheta + i * baseTheta,
+            x: Math.cos( shiftTheta + i * baseTheta ),
+            y: Math.sin( shiftTheta + i * baseTheta )
+        } );
     }
 
     // templates
@@ -32,22 +30,38 @@
     largeNode.innerHTML = '<div class="text-content"><div class="vertically-centered"></div></div>';
 
     var slotSizes = {
-            small:  { node: smallNode, r: 80, h: 80*cos(PI/6), width: 159, height: 150},
-            medium: { node: mediumNode, r: 160, h: 160*cos(PI/6), width: 317, height: 299},
-            large:  { node: largeNode, r: 240, h: 240*cos(PI/6), width: 475, height: 448} } ,
+            small:  {
+                node: smallNode,
+                radius: 80,
+                h: 80 * Math.cos( Math.PI/6 ),
+                width: 159,
+                height: 150 },
+            medium: {
+                node: mediumNode,
+                radius: 160,
+                h: 160 * Math.cos( Math.PI/6 ),
+                width: 317,
+                height: 299 },
+            large:  {
+                node: largeNode,
+                radius: 240,
+                h: 240 * Math.cos( Math.PI/6 ),
+                width: 475,
+                height: 448 }
+        } ,
         sizeID = 'small';
 
     var smallSlot = new Slot();
     smallSlot.setNode( slotSizes['small'].node );
-    smallSlot.setSize( slotSizes['small'].h, slotSizes['small'].width, slotSizes['small'].height );
+    smallSlot.setSize( slotSizes['small'].h, slotSizes['small'].radius, slotSizes['small'].width, slotSizes['small'].height );
 
     var mediumSlot = new Slot();
     mediumSlot.setNode( slotSizes['medium'].node );
-    mediumSlot.setSize( slotSizes['medium'].h, slotSizes['medium'].width, slotSizes['medium'].height );
+    mediumSlot.setSize( slotSizes['medium'].h, slotSizes['medium'].radius, slotSizes['medium'].width, slotSizes['medium'].height );
 
     var largeSlot = new Slot();
     largeSlot.setNode( slotSizes['large'].node );
-    largeSlot.setSize( slotSizes['large'].h, slotSizes['large'].width, slotSizes['large'].height );
+    largeSlot.setSize( slotSizes['large'].h, slotSizes['large'].radius, slotSizes['large'].width, slotSizes['large'].height );
 
     // slots
     function Slot() {
@@ -69,6 +83,8 @@
         // Length of the height of the hexagon
         self.h = 0;
 
+        // Radius of the height of the hexagon
+        self.radius = 0;
         // Associated div
         self.node = undefined;
 
@@ -138,7 +154,7 @@
             // set up node
             s.setNode( self.node.cloneNode(true) );
             // this is necessary, height and width cannot be obtained with clientWidth/Height yet
-            s.setSize( self.h, self.width, self.height );
+            s.setSize( self.h, self.radius, self.width, self.height );
             // display element. clientWidth and clientHeight are now available
             document.body.appendChild( s.node );
             // set up position
@@ -176,8 +192,9 @@
             self.node.style.left = ( self.x - self.width/2 ) + "px";
         };
 
-        self.setSize = function(h, width, height) {
+        self.setSize = function(h, radius, width, height) {
             self.h = h;
+            self.radius = radius;
             self.width = width;
             self.height = height;
         };
@@ -217,7 +234,7 @@
             var closestSlot = fittedSlots[0];
             for ( var i = 1; i < fittedSlots.length; i++ ) {
                 var d = distance(self, fittedSlots[i]);
-                if( dMin > d ) {
+                if( abs( dMin) > abs( d ) ) {
                     closestSlot = fittedSlots[i];
                     dMin = d;
                 }
@@ -225,15 +242,28 @@
 
             // bring the new slot closer to the closest one
             var dir = direction(self, closestSlot);
-            var d = distance(self, closestSlot) - MARGIN;
-            self.setPosition(self.x+d*dir.x, self.y+d*dir.y);
+            var d = distance(self, closestSlot);
+            d -= MARGIN;
+            if ( d > self.radius) {
+                // No sliding if we have to move for more than the radius
+                // However we will be sliding for very long if it is to get out of inside another slot (d < 0)
+                self.registerFit();
+                return;
+            }
+            self.setPosition(
+                self.x + d * dir.x,
+                self.y + d * dir.y );
 
             if ( fittedSlots.length == 1 ) {
                 self.registerFit();
                 return;
             }
 
-            var slidingDir = { theta: dir.theta+PI/2, x: cos( dir.theta+PI/2 ), y: sin( dir.theta+PI/2 ) };
+            var slidingDir = {
+                theta: dir.theta+Math.PI/2,
+                x: Math.cos( dir.theta+Math.PI/2 ),
+                y: Math.sin( dir.theta+Math.PI/2 )
+            };
             var secondClosestSlot;
             // now find the second closest in an adjacent direction
             for ( var i = 0; i < fittedSlots.length; i++ ) {
@@ -243,30 +273,39 @@
                 var tempDir = direction(self, fittedSlots[i]);
                 var deltaTheta = abs(tempDir.theta - dir.theta);
 
-                // adjacent direction <=> deltaTheta ~= PI/3 or deltaTheta ~= 5*PI/3
-                if ( !( deltaTheta > (PI/3 - 0.5) &&
-                        deltaTheta < (PI/3 + 0.5) ) &&
-                     !( deltaTheta > (5*PI/3 - 0.5) &&
-                        deltaTheta < (5*PI/3 + 0.5) ) ) {
+                // adjacent direction <=> deltaTheta ~= Math.PI/3 or deltaTheta ~= 5*Math.PI/3
+                /*if ( !( deltaTheta > (Math.PI/3 - 0.5) &&
+                        deltaTheta < (Math.PI/3 + 0.5) ) &&
+                     !( deltaTheta > (5*Math.PI/3 - 0.5) &&
+                        deltaTheta < (5*Math.PI/3 + 0.5) ) ) {
                     continue;
-                }
+                }*/
 
                 var d = distance(self, fittedSlots[i]);
                 if ( !secondClosestSlot ) {
                     secondClosestSlot = fittedSlots[i];
                     dMin = d;
-                } else if ( dMin > d ) {
+                } else if ( abs( dMin ) > abs( d ) ) {
                     secondClosestSlot = fittedSlots[i];
                     dMin = d;
                 }
             }
             if ( secondClosestSlot ) {
                 dir = direction(self, secondClosestSlot);
-                d = distance(self, secondClosestSlot) - MARGIN;
+                d = distance(self, secondClosestSlot);
+                d -= MARGIN;
                 cosAlpha = slidingDir.x*dir.x + slidingDir.y*dir.y; // both slidingDir and dir have a length of 1
                 slideLength = d / cosAlpha;
+
+                if ( abs( slideLength ) > self.radius) {
+                    // No sliding if we have to move for more than the radius
+                    self.registerFit();
+                    return;
+                }
+
                 self.setPosition(
-                    self.x+slideLength*slidingDir.x, self.y+slideLength*slidingDir.y);
+                    self.x + slideLength * slidingDir.x,
+                    self.y + slideLength * slidingDir.y);
             }
 
             // register position
@@ -427,7 +466,7 @@
             } else {
                 continue;
             }
-            s.setSize( size.h, size.width, size.height );
+            s.setSize( size.h, size.radius, size.width, size.height );
             
             // set up node
             s.setNode( div );
