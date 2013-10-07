@@ -1,5 +1,26 @@
-
 Action php54-cgi /php54.cgi
 <FilesMatch \.php$>
   SetHandler php54-cgi
 </FilesMatch>
+
+<IfModule mod_expires.c>
+
+# Enable expirations
+ExpiresActive On 
+
+# Default directive
+ExpiresDefault "access plus 1 week"
+
+# Images
+#ExpiresByType image/gif "access plus 1 year"
+ExpiresByType image/png "access plus 1 year"
+#ExpiresByType image/jpg "access plus 1 year"
+#ExpiresByType image/jpeg "access plus 1 year"
+
+# CSS
+ExpiresByType text/css "access 1 month”
+
+# Javascript
+ExpiresByType application/javascript "access plus 1 month"
+
+</IfModule>
