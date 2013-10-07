@@ -24,35 +24,16 @@ body {
     margin: auto;
 
     /* Other */
-    background-color: #ffffff;
+    
     font-family: 'Georgia', serif;
     font-size: 16pt;
     color: #384747;
     line-height: 1.3em;
-}
-
-@media screen and (max-width: 1024px) {
-    body {
-        background: 
-            url('../img/project-bg-top-1024.png') center top no-repeat,
-            url('../img/project-bg-bottom-1024.png') center bottom no-repeat;
-    }
-}
-
-@media screen and (min-width: 1025px) and (max-width: 1600px) {
-    body {
-        background: 
-            url('../img/project-bg-top-1600.png') center top no-repeat,
-            url('../img/project-bg-bottom-1600.png') center bottom no-repeat;
-    }
-}
-
-@media screen and (min-width: 1601px) {
-    body {
-        background: 
-            url('../img/project-bg-top-infinite.png') center top,
-            url('../img/project-bg-bottom-infinite.png') center bottom;
-    }
+    background: 
+        url('../img/project-bg-top.png') center top,
+        url('../img/project-bg-bottom.png') center bottom;
+    background-repeat: no-repeat;
+    background-color: #FFFFFF;
 }
 
 a {
@@ -578,6 +559,7 @@ footer {
     height: 560px;
     padding-left: 2.5em;
     padding-top: 2.5em;
+    margin-top: 1em;
 
     /* Other */
     font-family: 'Franchise Bold';
