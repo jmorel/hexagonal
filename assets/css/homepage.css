@@ -16,7 +16,9 @@ body {
     overflow: hidden;
 }
 
-*, *:before, *:after {
+*,
+*:before,
+*:after {
     /* Positioning */
     position: relative;
     
@@ -27,35 +29,6 @@ body {
     box-sizing:         border-box;
     margin: 0;
     border: 0;
-}
-
-/* ==========================================================================
-   Header
-   ========================================================================== */
-header {
-    /* Positioning */
-    position: absolute;
-    top: 200px;
-    left: 800px;
-
-    /* Display & Box Model */
-    display: inline-block;
-    -webkit-transform:  skew(0deg, -9deg);
-    -moz-transform:     skew(0deg, -9deg);
-    -ms-transform:      skew(0deg, -9deg);
-    -o-transform:       skew(0deg, -9deg);
-    transform:          skew(0deg, -9deg);
-    
-    /* Other */
-    font-family: 'Franchise Bold';
-    font-size: 120pt;
-    color: white;
-
-    /* Activate font smoothing */
-    -webkit-backface-visibility:    hidden;
-    -moz-backface-visibility:       hidden;
-    -ms-backface-visibility:        hidden;
-    backface-visibility:            hidden;
 }
 
 /* ==========================================================================
@@ -385,7 +358,7 @@ header {
 
 .slot-medium .ribbon {
     /* Display & Box Model */
-    margin-top: 0px;
+    margin-top: 0;
     margin-bottom: 12px;
     /* Other */
     font-size: 16pt;
@@ -393,7 +366,7 @@ header {
 
 .slot-large .ribbon {
     /* Display & Box Model */
-    margin-top: 0px;
+    margin-top: 0;
     margin-bottom: 24px;
 
     /* Other */
@@ -463,6 +436,7 @@ header {
     background-color: #ffffff;
     line-height: 1em;
     -webkit-box-shadow: 3px 3px #384747;
+    -moz-box-shadow: 3px 3px #384747;
     box-shadow:         3px 3px #384747;
 }
 
@@ -480,6 +454,7 @@ header {
 
     /* Other */
     -webkit-box-shadow: 3px 3px #384747;
+    -moz-box-shadow: 3px 3px #384747;
     box-shadow:         3px 3px #384747;
     
 }
@@ -615,6 +590,7 @@ header {
 .dragging {
     /* Display & Box Model */
     -webkit-user-select: none;
+    
     /* Other */
     cursor:  move;
     cursor: -webkit-grabbing;
