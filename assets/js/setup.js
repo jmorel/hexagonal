@@ -234,7 +234,7 @@
             var closestSlot = fittedSlots[0];
             for ( var i = 1; i < fittedSlots.length; i++ ) {
                 var d = distance(self, fittedSlots[i]);
-                if( abs( dMin) > abs( d ) ) {
+                if( Math.abs( dMin) > Math.abs( d ) ) {
                     closestSlot = fittedSlots[i];
                     dMin = d;
                 }
@@ -271,7 +271,7 @@
                 if ( fittedSlots[i] == closestSlot ) continue;
                 // only consider adjacent directions
                 var tempDir = direction(self, fittedSlots[i]);
-                var deltaTheta = abs(tempDir.theta - dir.theta);
+                var deltaTheta = Math.abs(tempDir.theta - dir.theta);
 
                 // adjacent direction <=> deltaTheta ~= Math.PI/3 or deltaTheta ~= 5*Math.PI/3
                 /*if ( !( deltaTheta > (Math.PI/3 - 0.5) &&
@@ -285,7 +285,7 @@
                 if ( !secondClosestSlot ) {
                     secondClosestSlot = fittedSlots[i];
                     dMin = d;
-                } else if ( abs( dMin ) > abs( d ) ) {
+                } else if ( Math.abs( dMin ) > Math.abs( d ) ) {
                     secondClosestSlot = fittedSlots[i];
                     dMin = d;
                 }
@@ -297,7 +297,7 @@
                 cosAlpha = slidingDir.x*dir.x + slidingDir.y*dir.y; // both slidingDir and dir have a length of 1
                 slideLength = d / cosAlpha;
 
-                if ( abs( slideLength ) > self.radius) {
+                if ( Math.abs( slideLength ) > self.radius) {
                     // No sliding if we have to move for more than the radius
                     self.registerFit();
                     return;
@@ -376,6 +376,7 @@
                 newSlot.fitPosition();
             }
         } else if ( evt.charCode == 112 ) {
+            divMode.innerHTML = 'fit page';
             // key = p, fit whole page dimension
             fitPageDimension();
         }
@@ -476,12 +477,16 @@
                 parseFloat( div.style.left ) + parseFloat( div.clientWidth )/2,
                 -parseFloat( div.style.top ) - parseFloat( div.clientHeight)/2 );
 
+            // set fitted status (allows for easy integration of new projects)
+            s.registerFit();
+
             // append slot
             slots.push( s );
 
             // set slot id into html doc
             div.dataset.slotid = slots.length;
             s.setID( slots.length );
+
         }
     }
 
